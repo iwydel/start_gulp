@@ -78,7 +78,7 @@ const build = () => {
   return src([
     'app/css/**/*.min.css',
     'app/js/**/*.min.js',
-    'app/fonts/ready/**/*{woff,woff2}',
+    'app/fonts/ready/**/*{woff, woff2}',
     'app/img/dest/**/*',
     'app/**/*.html',
   ], {base: 'app'})
