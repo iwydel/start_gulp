@@ -11,6 +11,8 @@ const cleancss = require('gulp-clean-css');
 const imagemins = require('gulp-imagemin');
 const newer = require('gulp-newer');
 const del = require('del');
+const ttf2woff = require('gulp-ttf2woff');
+const ttf2woff2 = require('gulp-ttf2woff2');
 
 const browsersync = () => {
   browserSync.init({
@@ -33,7 +35,10 @@ const scripts = () => {
 
 const styles = () => {
   return src(`app/${preprocessor}/main.${preprocessor}`)
-  .pipe(eval(preprocessor)())
+  .pipe(eval(preprocessor)({
+    outputStyle: "expanded"
+  }))
+  .pipe(dest('app/css'))
   .pipe(concat('main.min.css'))
   .pipe(autoprefixer({ overrideBrowserslist: ['last 10 versions'], grid: true }))
   .pipe(cleancss(({ level: { 1: { specialComments: 0 } } })))
@@ -49,12 +54,20 @@ const images = () => {
 }
 
 const fonts = () => {
+  src('app/fonts/**/*{ttf}')
+  .pipe(ttf2woff())
+  .pipe(dest('app/fonts/ready'))
   return src('app/fonts/**/*{ttf,woff,woff2,svg,eot}')
-  .pipe(browserSync.stream())
+  .pipe(ttf2woff2())
+  .pipe(dest('app/fonts/ready'))
 }
 
 const cleanimg = () => {
   return del('app/img/dest/**/*', { force: true })
+}
+
+const cleanfont = () => {
+  return del('app/fonts/ready', { forse: true })
 }
 
 const cleandist = () => {
@@ -65,7 +78,7 @@ const build = () => {
   return src([
     'app/css/**/*.min.css',
     'app/js/**/*.min.js',
-    'app/fonts/**/*{ttf,woff,woff2,svg,eot}',
+    'app/fonts/ready/**/*{woff,woff2}',
     'app/img/dest/**/*',
     'app/**/*.html',
   ], {base: 'app'})
@@ -86,6 +99,7 @@ exports.styles = styles;
 exports.images = images;
 exports.fonts = fonts;
 exports.cleanimg = cleanimg;
+exports.cleanfont = cleanfont;
 exports.cleandist = cleandist;
-exports.build = series(cleandist, styles, fonts, scripts, images, build);
-exports.default = parallel(styles, fonts, scripts, images, browsersync, startwatch)
+exports.build = series(cleandist, styles, cleanfont, fonts, scripts, images, build);
+exports.default = parallel(styles, fonts, scripts, images, browsersync, startwatch);
