@@ -26,7 +26,7 @@ const scripts = () => {
   return src([ 'app/js/app.js' ])
   .pipe(concat('app.min.js'))
   .pipe(uglify())
-  .pipe(dest('dist/js/'))
+  .pipe(dest('app/js/'))
   .pipe(browserSync.stream())
 }
 
@@ -39,7 +39,7 @@ const styles = () => {
   .pipe(concat('main.min.css'))
   .pipe(autoprefixer({ overrideBrowserslist: ['last 10 versions'], grid: true }))
   .pipe(cleancss(({ level: { 1: { specialComments: 0 } } })))
-  .pipe(dest('dist/css'))
+  .pipe(dest('app/css'))
   .pipe(browserSync.stream())
 }
 
