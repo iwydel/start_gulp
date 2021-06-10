@@ -1,10 +1,10 @@
-let preprocessor = 'sass';
+let preprocessor = 'scss';
 
 const { src, dest, parallel, series, watch } = require('gulp');
 const browserSync = require('browser-sync').create();
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify-es').default;
-const sass = require('gulp-sass');
+const scss = require('gulp-sass');
 const less = require('gulp-less');
 const autoprefixer = require('gulp-autoprefixer');
 const cleancss = require('gulp-clean-css');
@@ -23,13 +23,10 @@ const browsersync = () => {
 }
 
 const scripts = () => {
-  return src([
-    'app/js/app.js'
-
-  ])
+  return src([ 'app/js/app.js' ])
   .pipe(concat('app.min.js'))
   .pipe(uglify())
-  .pipe(dest('app/js/'))
+  .pipe(dest('dist/js/'))
   .pipe(browserSync.stream())
 }
 
@@ -42,7 +39,7 @@ const styles = () => {
   .pipe(concat('main.min.css'))
   .pipe(autoprefixer({ overrideBrowserslist: ['last 10 versions'], grid: true }))
   .pipe(cleancss(({ level: { 1: { specialComments: 0 } } })))
-  .pipe(dest('app/css'))
+  .pipe(dest('dist/css'))
   .pipe(browserSync.stream())
 }
 
@@ -101,5 +98,5 @@ exports.fonts = fonts;
 exports.cleanimg = cleanimg;
 exports.cleanfont = cleanfont;
 exports.cleandist = cleandist;
-exports.build = series(cleandist, styles, cleanfont, fonts, scripts, images, build);
+exports.build = series(cleandist, styles, cleanfont, fonts, scripts, cleanimg, images, build);
 exports.default = parallel(styles, fonts, scripts, images, browsersync, startwatch);

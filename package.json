@@ -4,10 +4,11 @@
   "description": "This is start gulp project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "gulp",
+    "build": "gulp build"
   },
   "author": "Aleksandr Konstantinoff",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "browser-sync": "^2.26.13",
     "del": "^6.0.0",
